@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CadastroEscolar.Domain\CadastroEscolar.Domain.csproj" />
+    <ProjectReference Include="..\CadastroEscolar.Infra.Data\CadastroEscolar.Infra.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Views\Professor\Index.cshtml" />
+  </ItemGroup>
+
+</Project>

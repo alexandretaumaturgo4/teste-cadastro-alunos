@@ -1,0 +1,113 @@
+﻿<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<table class="table table-striped">
+    
+    @if (ViewBag.MostrarBotaoLote == true)
+    { 
+        <form id="myForm" enctype="multipart/form-data" action="@Url.Action("CadastrarAlunosEmLote", "Alunos")" method="post" style="display: none;">
+            <input type="hidden" name="professorId" value="@ViewBag.ProfessorId"/>
+            <div class="form-group custom-file-input">
+                <input type="file" id="file" name="file" required class="real-file" style="display: none;"/>
+                <label for="file" class="custom-file-label">Escolha um arquivo</label>
+            </div> 
+        </form>
+ 
+        <button id="triggerFileInput" class="btn btn-primary">Cadastrar Alunos em Lote</button>
+    }
+    else
+    {
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cadastrarAlunoModal">Cadastrar Aluno</button>
+    }
+    
+    <thead>
+    <tr>
+        <th scope="col">Nome</th>
+        <th scope="col">Mensalidade</th>
+        <th scope="col">Data de Vencimento</th>
+        <th scope="col">Nome do Professor</th>
+        <th scope="col">Ação</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var aluno in Model)
+    {
+        <tr>
+            <td>@aluno.Nome</td>
+            <td>@aluno.Mensalidade.ToString("C")</td>
+            <td>@aluno.DataVencimento.ToShortDateString()</td>
+            <td>@aluno.NomeProfessor</td>
+            <td>
+                <form method="post" action="@Url.Action("ExcluirAluno", "Alunos", new { alunoId = aluno.Id })">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<div class="modal fade" id="cadastrarAlunoModal" tabindex="-1" aria-labelledby="cadastrarAlunoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cadastrarAlunoModalLabel">Cadastrar Novo Aluno</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCadastrarAluno" method="post" action="@Url.Action("CadastrarAluno", "Alunos")">
+                    <div class="mb-3">
+                        <label for="nomeAluno" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="nomeAluno" name="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mensalidadeAluno" class="form-label">Mensalidade</label>
+                        <input type="number" step="0.01" class="form-control" id="mensalidadeAluno" name="mensalidade" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dataVencimentoAluno" class="form-label">Data de Vencimento</label>
+                        <input type="date" class="form-control" id="dataVencimentoAluno" name="dataVencimento" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="professorAluno" class="form-label">Professor</label>
+                        <select class="form-control" id="professorAluno" name="professorId" required>
+                            @foreach (var professor in ViewBag.Professores)
+                            {
+                                <option value="@professor.Id">@professor.Nome</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Adicionar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["Mensagem"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Mensagem"]
+    </div>
+}
+
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Erro"]
+    </div>
+}
+
+
+<script>
+$(document).ready(function() {
+    $('#triggerFileInput').click(function() {
+        $('#file').click();
+    });
+
+    $('#file').change(function() {
+        if ($(this).val() !== '') {
+            $('#myForm').submit();
+        }
+    });
+});
+</script>
